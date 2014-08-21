@@ -29,7 +29,7 @@ class Foo < ActiveRecord::Base
 end
 ```
 
-Then,
+Then, these scopes will be available.
 
 ```ruby
 Foo.created_before 3.days.ago
@@ -49,7 +49,7 @@ class Round < ActiveRecord::Base
 end
 ```
 
-Then,
+Then, these scopes will be available.
 
 ```
 Round.run_before 3.days.ago
