@@ -1,7 +1,7 @@
 module ActiveRecord
   module TimeScope
     class ScopeProxy
-      def new(*args)
+      def self.new(*args)
         @proxies ||= {}
         @proxies[args] ||= super(*args)
       end
