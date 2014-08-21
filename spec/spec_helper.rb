@@ -1,9 +1,12 @@
 require 'rubygems'
+require 'database_cleaner'
 require 'simplecov'
 require 'coveralls'
 Coveralls.wear!
 
-require 'database_cleaner'
+SimpleCov.start do
+  add_filter 'spec/'
+end
 
 require 'activerecord-time-scope'
 
