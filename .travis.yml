@@ -1,0 +1,20 @@
+language: ruby
+
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1
+
+env:
+  -
+  - ACTIVE_RECORD_VERSION=3.2.0
+  - ACTIVE_RECORD_VERSION=4.0.0
+  - ACTIVE_RECORD_VERSION=4.1.0
+  - ACTIVE_RECORD_VERSION=4.2.0
+  - ACTIVE_RECORD_VERSION=4.2.0.beta1
+
+script: "bundle exec rake spec"
+
+branches:
+  only:
+    - master
