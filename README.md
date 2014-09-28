@@ -80,10 +80,19 @@ Round.run_within 3.days.ago, 3.days.from_now
 
 will be available for the class!
 
+## Options
+
+### include_equal
+
+```ruby
+Foo.created_before 3.days.ago, include_equal: true
+Foo.created_after 3.days.ago, include_equal: true
+Foo.created_within 3.days.ago, 2.days.ago, {include_equal: true}, {include_equal: false}
+```
+
 ## TODO
 
 - Handle overwrapped cases
-- Include equal operators
 
 ## Contributing
 
