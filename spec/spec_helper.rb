@@ -16,6 +16,7 @@ ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
 
 RSpec.configure do |c|
   c.before :suite do
+    ActiveRecord::Migration.verbose = false
     DatabaseCleaner.clean_with :truncation
   end
   c.before :example do
