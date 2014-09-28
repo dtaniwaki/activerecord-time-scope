@@ -10,18 +10,18 @@ module ActiveRecord
       end
 
       def before(time, opts = {})
-        operator = opts[:include_equal].to_s != '' ? '=<' : '<'
+        operator = opts[:include_equal].to_s != '' ? '<=' : '<'
         @model.where("#{@column_name1} #{operator} ? AND #{@column_name2} #{operator} ?", time, time)
       end
 
       def after(time, opts = {})
-        operator = opts[:include_equal].to_s != '' ? '=<' : '<'
+        operator = opts[:include_equal].to_s != '' ? '<=' : '<'
         @model.where("? #{operator} #{@column_name1} AND ? #{operator} #{@column_name2}", time, time)
       end
 
       def within(from, to, from_opts = {}, to_opts = {})
-        from_operator = from_opts[:include_equal].to_s != '' ? '=<' : '<'
-        to_operator = to_opts[:include_equal].to_s != '' ? '=<' : '<'
+        from_operator = from_opts[:include_equal].to_s != '' ? '<=' : '<'
+        to_operator = to_opts[:include_equal].to_s != '' ? '<=' : '<'
         @model.where("? #{from_operator} #{@column_name1} AND #{@column_name2} #{to_operator} ?", from, to)
       end
     end
