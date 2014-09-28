@@ -1,7 +1,10 @@
-def create_tmp_model(_model_name, _table_name = 'tmp', _columns = {}, &_block)
-  if ActiveRecord::Base.connection.table_exists? _table_name
-    ActiveRecord::Migration.drop_table _table_name
-  end
+def create_tmp_model(_columns = {}, &_block)
+  time = Time.now.to_f.to_s.gsub('.', '_')
+  _model_name = "TmpClass#{time}"
+  _table_name = "tmp_class#{time}s"
+  # if ActiveRecord::Base.connection.table_exists? _table_name
+  #   ActiveRecord::Migration.drop_table _table_name
+  # end
   begin
     Object.send :remove_const, _model_name
   rescue NameError

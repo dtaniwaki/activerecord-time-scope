@@ -10,14 +10,11 @@ module ActiveRecord
     end
 
     module ClassMethods
-      def inherited(subclass)
-        super
-        if subclass.table_exists?
-          subclass.column_names.each do |cn|
-            verb = cn.sub TIME_POSTFIX_REGEXP, ''
-            next if verb == cn
-            subclass.create_time_scope verb, cn
-          end
+      def create_time_scopes
+        column_names.each do |cn|
+          verb = cn.sub TIME_POSTFIX_REGEXP, ''
+          next if verb == cn
+          create_time_scope verb, cn
         end
       end
 

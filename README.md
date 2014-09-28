@@ -22,10 +22,13 @@ And run `bundle install`.
 
 ### Time
 
-This gem automatically create scopes for time-related columns of your ActiveRecord model such as 'created_at'.
+#### Auto
+
+To create scopes for time-related columns of your ActiveRecord model such as 'created_at',
 
 ```ruby
 class Foo < ActiveRecord::Base
+  create_time_scopes
 end
 ```
 
@@ -38,6 +41,24 @@ Foo.created_within 3.days.ago, 3.days.from_now
 ```
 
 Any columns with `_at`, `_on`, `_time` and `_date` postfix are considered as time-related columns.
+
+#### Manual
+
+If the column name is not time-related, you can create the time scope manually.
+
+```ruby
+class Foo < ActiveRecord::Base
+  create_time_scope :started, :created_at
+end
+```
+
+Then, these scopes will be available.
+
+```ruby
+Foo.started_before 3.days.ago
+Foo.started_after 3.days.ago
+Foo.started_within 3.days.ago, 3.days.from_now
+```
 
 ### Time Range
 
