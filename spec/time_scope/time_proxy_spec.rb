@@ -10,79 +10,158 @@ RSpec.describe ActiveRecord::TimeScope::TimeProxy do
   end
 
   describe "::foo_before" do
-    subject { klass.foo_before(time) }
-    # .=...
-    # ..!..
-    context "foo < time" do
-      let!(:model) { klass.create! foo: time + 1.days }
-      it { is_expected.to eq [] }
+    shared_examples "before" do
+      before do
+        klass.create! foo: time + 100.days
+      end
+      let(:options) { {} }
+      let(:a) { false }
+      let(:b) { false }
+      let(:c) { false }
+      subject { klass.foo_before(time, options) == [model] }
+      # .=...
+      # ..!..
+      context "foo < time" do
+        let!(:model) { klass.create! foo: time + 1.days }
+        it { is_expected.to be a }
+      end
+      # ...=.
+      # ..!..
+      context "time < foo" do
+        let!(:model) { klass.create! foo: time - 1.days }
+        it { is_expected.to be b }
+      end
+      # ..=..
+      # ..!..
+      context "time = foo" do
+        let!(:model) { klass.create! foo: time }
+        it { is_expected.to be c }
+      end
     end
-    # ...=.
-    # ..!..
-    context "time < foo" do
-      let!(:model) { klass.create! foo: time - 1.days }
-      it { is_expected.to eq [model] }
+    it_behaves_like "before" do
+      let(:b) { true }
     end
-    # ..=..
-    # ..!..
-    context "time = foo" do
-      let!(:model) { klass.create! foo: time }
-      it { is_expected.to eq [] }
+    context "with include_equal option" do
+      it_behaves_like "before" do
+        let(:options) { {include_equal: true} }
+        let(:b) { true }
+        let(:c) { true }
+      end
     end
   end
   describe "::foo_after" do
-    subject { klass.foo_after(time) }
-    # .=...
-    # ..!..
-    context "foo < time" do
-      let!(:model) { klass.create! foo: time + 1.days }
-      it { is_expected.to eq [model] }
+    shared_examples "after" do
+      before do
+        klass.create! foo: time - 100.days
+      end
+      let(:options) { {} }
+      let(:a) { false }
+      let(:b) { false }
+      let(:c) { false }
+      subject { klass.foo_after(time, options) == [model] }
+      # A
+      # .=...
+      # ..!..
+      context "foo < time" do
+        let!(:model) { klass.create! foo: time + 1.days }
+        it { is_expected.to be a }
+      end
+      # B
+      # ...=.
+      # ..!..
+      context "time < foo" do
+        let!(:model) { klass.create! foo: time - 1.days }
+        it { is_expected.to be b }
+      end
+      # C
+      # ..=..
+      # ..!..
+      context "time = foo" do
+        let!(:model) { klass.create! foo: time }
+        it { is_expected.to be c }
+      end
     end
-    # ...=.
-    # ..!..
-    context "time < foo" do
-      let!(:model) { klass.create! foo: time - 1.days }
-      it { is_expected.to eq [] }
+    it_behaves_like "after" do
+      let(:a) { true }
     end
-    # ..=..
-    # ..!..
-    context "time = foo" do
-      let!(:model) { klass.create! foo: time }
-      it { is_expected.to eq [] }
+    context "with include_equal option" do
+      it_behaves_like "after" do
+        let(:options) { {include_equal: true} }
+        let(:a) { true }
+        let(:c) { true }
+      end
     end
   end
   describe "::foo_within" do
-    subject { klass.foo_within(time - 2.days, time + 2.days) }
-    let(:time) { DateTime.now }
-    # .=...
-    # ..!!.
-    context "foo < time1 < time2" do
-      let!(:model) { klass.create! foo: time - 3.days }
-      it { is_expected.to eq [] }
+    shared_examples "within" do
+      before do
+        klass.create! foo: time - 100.days
+      end
+      let(:from_options) { {} }
+      let(:to_options) { {} }
+      let(:a) { false }
+      let(:b) { false }
+      let(:c) { false }
+      let(:d) { false }
+      let(:e) { false }
+      subject { klass.foo_within(time - 2.days, time + 2.days, from_options, to_options) == [model] }
+      # A
+      # .=...
+      # ..!!.
+      context "foo < time1 < time2" do
+        let!(:model) { klass.create! foo: time - 3.days }
+        it { is_expected.to be a }
+      end
+      # B
+      # .=...
+      # .!!..
+      context "foo = time1 < time2" do
+        let!(:model) { klass.create! foo: time - 2.days }
+        it { is_expected.to be b }
+      end
+      # C
+      # ..=..
+      # .!.!.
+      context "time1 < foo < time2" do
+        let!(:model) { klass.create! foo: time }
+        it { is_expected.to be c }
+      end
+      # D
+      # ...=.
+      # ..!!.
+      context "time1 < time2 = foo" do
+        let!(:model) { klass.create! foo: time + 2.days }
+        it { is_expected.to be d }
+      end
+      # E
+      # ...=.
+      # .!!..
+      context "time1 < time2 < foo" do
+        let!(:model) { klass.create! foo: time + 3.days }
+        it { is_expected.to be e }
+      end
     end
-    # .=...
-    # .!!..
-    context "foo = time1 < time2" do
-      let!(:model) { klass.create! foo: time - 3.days }
-      it { is_expected.to eq [] }
+    it_behaves_like "within" do
+      let(:c) { true }
     end
-    # ..=..
-    # .!.!.
-    context "time1 < foo < time2" do
-      let!(:model) { klass.create! foo: time }
-      it { is_expected.to eq [model] }
-    end
-    # ...=.
-    # ..!!.
-    context "time1 < time2 = foo" do
-      let!(:model) { klass.create! foo: time + 3.days }
-      it { is_expected.to eq [] }
-    end
-    # ...=.
-    # .!!..
-    context "-2 days < +2 days < foo" do
-      let!(:model) { klass.create! foo: time + 3.days }
-      it { is_expected.to eq [] }
+    context "with include_equal option" do
+      it_behaves_like "within" do
+        let(:from_options) { {include_equal: true} }
+        let(:b) { true }
+        let(:c) { true }
+      end
+      it_behaves_like "within" do
+        let(:to_options) { {include_equal: true} }
+        let(:c) { true }
+        let(:d) { true }
+      end
+      it_behaves_like "within" do
+        let(:from_options) { {include_equal: true} }
+        let(:to_options) { {include_equal: true} }
+        let(:b) { true }
+        let(:c) { true }
+        let(:d) { true }
+      end
     end
   end
 end
