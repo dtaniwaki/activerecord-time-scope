@@ -11,6 +11,7 @@ module ActiveRecord
 
     module ClassMethods
       def create_time_scopes
+        return unless table_exists?
         column_names.each do |cn|
           verb = cn.sub TIME_POSTFIX_REGEXP, ''
           next if verb == cn
