@@ -115,8 +115,8 @@ Copyright (c) 2014 Daisuke Taniwaki. See [LICENSE](LICENSE) for details.
 [build-link]:  http://travis-ci.org/dtaniwaki/activerecord-time-scope
 [deps-image]:  https://gemnasium.com/dtaniwaki/activerecord-time-scope.svg
 [deps-link]:   https://gemnasium.com/dtaniwaki/activerecord-time-scope
-[cov-image]:   https://coveralls.io/repos/dtaniwaki/activerecord-time-scope/badge.png
-[cov-link]:    https://coveralls.io/r/dtaniwaki/activerecord-time-scope
+[cov-image]:   https://codeclimate.com/github/dtaniwaki/activerecord-time-scope/badges/coverage.svg
+[cov-link]:    https://codeclimate.com/github/dtaniwaki/activerecord-time-scope
 [gpa-image]:   https://codeclimate.com/github/dtaniwaki/activerecord-time-scope.png
 [gpa-link]:    https://codeclimate.com/github/dtaniwaki/activerecord-time-scope
 
