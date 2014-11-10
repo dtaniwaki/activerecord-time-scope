@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'database_cleaner'
 require 'simplecov'
-require 'coveralls'
-Coveralls.wear!
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 SimpleCov.start do
   add_filter 'spec/'
