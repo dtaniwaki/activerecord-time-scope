@@ -24,6 +24,12 @@ module ActiveRecord
         to_operator = to_opts[:include_equal].to_s != '' ? '<=' : '<'
         @model.where("? #{from_operator} #{@column_name1} AND #{@column_name2} #{to_operator} ?", from, to)
       end
+
+      def at(dt, opts = {})
+        operator = opts[:include_equal].to_s != '' ? '<=' : '<'
+        @model.where("#{@column_name1} #{operator} ? AND ? #{operator} #{@column_name2}", dt, dt)
+      end
+      alias_method :on, :at
     end
   end
 end

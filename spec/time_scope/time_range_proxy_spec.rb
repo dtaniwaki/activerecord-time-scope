@@ -247,4 +247,64 @@ RSpec.describe ActiveRecord::TimeScope::TimeRangeProxy do
       end
     end
   end
+  describe "::wow_at" do
+    shared_examples "at" do
+      before do
+        klass.create! foo: time + 100.days, bar: time + 100.days
+      end
+      let(:options) { {} }
+      let(:a) { false }
+      let(:b) { false }
+      let(:c) { false }
+      let(:d) { false }
+      let(:e) { false }
+      subject { klass.wow_at(time, options) == [model] }
+      # A
+      # .=====.
+      # ......!
+      context "foo < bar < time" do
+        let!(:model) { klass.create! foo: time - 2.days, bar: time - 1.days }
+        it { is_expected.to be a }
+      end
+      # B
+      # .=====.
+      # .....!.
+      context "foo < bar = time" do
+        let!(:model) { klass.create! foo: time - 2.days, bar: time }
+        it { is_expected.to be b }
+      end
+      # C
+      # .=====.
+      # !......
+      context "time < foo < bar" do
+        let!(:model) { klass.create! foo: time + 1.days, bar: time + 2.days }
+        it { is_expected.to be c }
+      end
+      # D
+      # .=====.
+      # .!.....
+      context "time = foo < bar" do
+        let!(:model) { klass.create! foo: time, bar: time + 2.days }
+        it { is_expected.to be d }
+      end
+      # E
+      # .=====.
+      # ...!...
+      context "foo < time < bar" do
+        let!(:model) { klass.create! foo: time - 1.days, bar: time + 1.days }
+        it { is_expected.to be e }
+      end
+    end
+    it_behaves_like "at" do
+      let(:e) { true }
+    end
+    context "with include_equal option" do
+      it_behaves_like "at" do
+        let(:options) { {include_equal: true} }
+        let(:b) { true }
+        let(:d) { true }
+        let(:e) { true }
+      end
+    end
+  end
 end

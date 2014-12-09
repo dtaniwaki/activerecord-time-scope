@@ -31,9 +31,11 @@ module ActiveRecord
         model = self
         from_name = "#{table_name}.#{from_name}"
         to_name = "#{table_name}.#{to_name}"
-        model.scope "#{verb}_before", ->(time, opts = {}){ TimeRangeProxy.new(model, from_name, to_name).before(time, opts) }
+        scope "#{verb}_before", ->(time, opts = {}){ TimeRangeProxy.new(model, from_name, to_name).before(time, opts) }
         scope "#{verb}_after", ->(time, opts = {}){ TimeRangeProxy.new(model, from_name, to_name).after(time, opts) }
         scope "#{verb}_within", ->(from, to, from_opts = {}, to_opts = {}){ TimeRangeProxy.new(model, from_name, to_name).within(from, to, from_opts, to_opts) }
+        scope "#{verb}_at", ->(dt, opts = {}){ TimeRangeProxy.new(model, from_name, to_name).at(dt, opts) }
+        scope "#{verb}_on", ->(dt, opts = {}){ TimeRangeProxy.new(model, from_name, to_name).at(dt, opts) }
       end
     end
   end
